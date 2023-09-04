@@ -1,0 +1,3 @@
+services:
+  upa_cumbica:
+    url: https://app.sinconecta.com/ords/saude/api
