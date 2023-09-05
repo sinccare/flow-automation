@@ -1,12 +1,16 @@
 package pageobject;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.*;
-import static org.testng.AssertJUnit.assertEquals;
 
 public class ItensPage {
+    private ExtentTest test;
+
+
     SelenideElement txtPesquisaItem    = $(By.id("cphBody_Conteudo_txtProduto"));
     SelenideElement txtNovaPesquisa    = $(By.id("cphBody_Conteudo_txtPesquisa"));
     SelenideElement btnCancelaPesquisa = $(By.id("cphBody_Conteudo_btnLimpaBuscaPesquisa"));
@@ -18,25 +22,31 @@ public class ItensPage {
     SelenideElement btnFechaModal      = $(By.id("fechaPopup"));
     SelenideElement btnVoltar          = $(By.id("cphBody_lbtVoltar"));
     SelenideElement lblmsgSucesso      = $(By.id("cphBody_Conteudo_Msg_lblMensagem"));
+    SelenideElement lblMsgAviso        = $(By.id("cphBody_Conteudo_Msg_lblMensagem"));
 
     public void pesquisarItens(String codigo){
         txtPesquisaItem.setValue(codigo);
         txtPesquisaItem.pressEnter();
     }
 
-    public void selecionarItens(String codItem){
+    public void selecionarItens(String codItem) throws Exception {
         btnCancelaPesquisa.isEnabled();
         btnCancelaPesquisa.click();
         txtNovaPesquisa.setValue(codItem);
         txtNovaPesquisa.pressEnter();
         SelenideElement optLista =  $(By.xpath("//*/tr/td[contains(text(),'" + codItem + "')]"));
-        optLista.isEnabled();
-        optLista.click();
-        btnConfirmar.isEnabled();
-        btnConfirmar.click();
+        if(lblMsgAviso.isEnabled()){
+            test.log(Status.FAIL,"A opição não foi carregada na tela");
+
+        }else
+        {
+            optLista.click();
+            btnConfirmar.isEnabled();
+            btnConfirmar.click();
+        }
     }
 
-    public void inserirItens(String qtdd){
+    public void inserirItens(String qtdd) throws Exception {
         txtQtdItens.isEnabled();
         txtQtdItens.setValue(qtdd);
         optListaItens.click();
@@ -45,14 +55,17 @@ public class ItensPage {
         verificarMensagemSucesso();
     }
 
-    public void verificarMensagemSucesso(){
-        modalConfirmacao.isEnabled();
-        sleep(2000);
-        assertEquals("Item lançado com sucesso!", lblmsgSucesso.getText());
-        btnFechaModal.click();
+    public void verificarMensagemSucesso() throws Exception {
+        if(lblmsgSucesso.getText() == "Item lançado com sucesso!"){
+            modalConfirmacao.isEnabled();
+            sleep(2000);
+            btnFechaModal.click();
+        }else{
+            test.log(Status.FAIL, "Ocorreu um erro ao inserir o item");
+        }
     }
 
-    public void novaInsercao(String codigo, String qtdd){
+    public void novaInsercao(String codigo, String qtdd) throws Exception {
         btnLimpaBusca.isEnabled();
         btnLimpaBusca.click();
         pesquisarItens("ALTEPLASE");
