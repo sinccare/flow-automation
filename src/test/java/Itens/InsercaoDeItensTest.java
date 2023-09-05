@@ -68,7 +68,7 @@ public class InsercaoDeItensTest extends BaseTest {
         }
     }
     private void handleException(String message) {
-        test.log(Status.FAIL, "Não existe itens a serem inseridos nesse momento!");
+        test.log(Status.FAIL, "Ocorreu um erro durante a execução!");
         test.log(Status.INFO, message);
         extent.flush();
         Assert.fail();

@@ -151,10 +151,10 @@ public abstract class BaseTest {
         mapper.writeValue(new File("src/test/resources/dataMass/itens_inseridos.yaml"), itensInseridos);
     }
 
-    @AfterMethod
-    public void after() {
-        closeWindow();
-        closeWebDriver();
-    }
+//    @AfterMethod
+//    public void after() {
+//        closeWindow();
+//        closeWebDriver();
+//    }
 }
 
