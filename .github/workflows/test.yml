@@ -45,3 +45,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: target/site/relatorios/RELATORIO-INSERCAO.html
+          tag_name: v1.0.0 
