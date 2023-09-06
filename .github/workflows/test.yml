@@ -6,10 +6,36 @@ on:
       - main
 
 jobs:
-  test:
+  run-tests-on-linux:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        maven-goal: [ 'clean test', 'clean test -Dtest=FirefoxHeadlessTest', 'clean test -Dtest=ChromeHeadlessTest' ]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'  # ou qualquer versão do Java que você deseja
+
+      - name: Set up Maven
+        run: |
+          sudo apt-get install -y maven
+          mvn -version
+
+      - name: Build and Test with Maven
+        run: mvn ${{ matrix.maven-goal }}
+
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: test-report-linux
+          path: |
+            target/surefire-reports  # ou o caminho para seus relatórios de teste Maven
+
       - name: Checkout code
         uses: actions/checkout@v2
 
