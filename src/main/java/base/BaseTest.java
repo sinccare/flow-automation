@@ -58,6 +58,7 @@ public abstract class BaseTest {
     public void before() {
         configurationSelenide();
         clearBrowserCookies();
+        open("https://guarulhoshospitalar.sissonline.com.br/Abertura/Login.aspx");
         login = new LoginPage();
         home = new HomePage();
         suprimentos = new SuprimentosLogisticaPage();
@@ -106,7 +107,6 @@ public abstract class BaseTest {
     }
 
     private void logarEConfigurarPaciente() {
-        open("https://guarulhoshospitalar.sissonline.com.br/Abertura/Login.aspx");
         login.logar();
         home.acessarModuloSuprimentos();
         suprimentos.acessarPrescricaoDireta();
