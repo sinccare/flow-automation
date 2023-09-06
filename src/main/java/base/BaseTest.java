@@ -58,6 +58,7 @@ public abstract class BaseTest {
     public void before() {
         configurationSelenide();
         clearBrowserCookies();
+        open("https://guarulhoshospitalar.sissonline.com.br/Abertura/Login.aspx");
         login = new LoginPage();
         home = new HomePage();
         suprimentos = new SuprimentosLogisticaPage();
@@ -106,7 +107,6 @@ public abstract class BaseTest {
     }
 
     private void logarEConfigurarPaciente() {
-        open("https://guarulhoshospitalar.sissonline.com.br/Abertura/Login.aspx");
         login.logar();
         home.acessarModuloSuprimentos();
         suprimentos.acessarPrescricaoDireta();
@@ -114,36 +114,36 @@ public abstract class BaseTest {
     }
 
     private void selecionarEPreencherDadosItemASerInserido(String lastCustomCode, String lastQuantity, String bkpId) throws Exception {
-       try {
-           itens.pesquisarItens("ALTEPLASE");
-           itens.novapesquisaItem(lastCustomCode);
-           SelenideElement optLista = $(By.xpath("//*/tr/td[contains(text(),'" + lastCustomCode + "')]"));
+        try {
+            itens.pesquisarItens("ALTEPLASE");
+            itens.novapesquisaItem(lastCustomCode);
+            SelenideElement optLista = $(By.xpath("//*/tr/td[contains(text(),'" + lastCustomCode + "')]"));
 
-           if (optLista.is(visible)) {
-               optLista.click();
-               itens.btnConfirmar.isEnabled();
-               itens.btnConfirmar.click();
-               adicionarItemInserido(bkpId);
-               Utils.criarArquivoUltimoID(bkpId);
-               criarArquivoYAML();
-               consultarDados();
-           }else{
-               test.log(Status.ERROR, "Item não acessível");
-               extent.flush();
-               closeWindow();
-               throw new Exception();
-           }
-           itens.inserirItens(lastQuantity);
+            if (optLista.is(visible)) {
+                optLista.click();
+                itens.btnConfirmar.isEnabled();
+                itens.btnConfirmar.click();
+                adicionarItemInserido(bkpId);
+                Utils.criarArquivoUltimoID(bkpId);
+                criarArquivoYAML();
+                consultarDados();
+            }else{
+                test.log(Status.ERROR, "Item não acessível");
+                extent.flush();
+                closeWindow();
+                throw new Exception();
+            }
+            itens.inserirItens(lastQuantity);
 
 
-       }catch (Exception e){
-           Utils.criarArquivo(null, Utils.lerArquivo("massaDeDados", "last_id"), null);
-           Utils.criarArquivoUltimoID(bkpId);
-           Selenide.closeWindow();
-           test.log(Status.ERROR, "Ocorreu um erro durante a pesquisa do item, erro: " + e.getMessage());
-           extent.flush();
-           throw new Exception(e.getMessage());
-       }
+        }catch (Exception e){
+            Utils.criarArquivo(null, Utils.lerArquivo("massaDeDados", "last_id"), null);
+            Utils.criarArquivoUltimoID(bkpId);
+            Selenide.closeWindow();
+            test.log(Status.ERROR, "Ocorreu um erro durante a pesquisa do item, erro: " + e.getMessage());
+            extent.flush();
+            throw new Exception(e.getMessage());
+        }
 
     }
     protected void inserirSuprimentos() throws Exception {
@@ -177,7 +177,7 @@ public abstract class BaseTest {
                     Selenide.closeWindow();
                     test.log(Status.INFO, "Após nova consulta, nenhum item foi retornado!");
                     test.log(Status.INFO, "Lista de item(s) inserido(s): " +
-                                                 Utils.lerArquivo("itens_inseridos", "id"));
+                            Utils.lerArquivo("itens_inseridos", "id"));
                     extent.flush();
                     break;
                 } else {
