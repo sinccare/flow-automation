@@ -37,14 +37,6 @@ jobs:
         run: mvn site
         continue-on-error: true
 
-      - name: Create Release and Upload Report
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: relatorios/RELATORIO-INSERCAO.html
-          token: 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
-          tag_name: v1.0.0
-
       - name: Zip Report
         run: zip -r relatorios.zip relatorios/
 
