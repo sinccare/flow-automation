@@ -17,7 +17,9 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'adopt'
+          
+      - name: Print Java Distribution
+        run: java -version
 
       - name: Install Chrome
         run: |
