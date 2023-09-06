@@ -1,14 +1,12 @@
-name: Automação do fluxo Inserção de itens
+name: Test Automation
 
 on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 9,11,14,15,18 * * 1,2,3,4,5'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,9 +17,14 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'adopt'
 
-      - name: Print Java Distribution
-        run: java -version
+      - name: Install Chrome
+        run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          sudo apt-get -f install
+          rm google-chrome-stable_current_amd64.deb
 
       - name: Cache Maven dependencies
         uses: actions/cache@v2
@@ -31,14 +34,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Build with Maven
-        run: mvn clean verify
+      - name: Run tests with Maven
+        run: mvn clean test
 
-      - name: Run Tests with Selenide
-        run: mvn test
+      - name: Generate Test Report
+        run: mvn site
+        continue-on-error: true
 
-      - name: Create Release and Upload Report
-        id: create_release
-        uses: softprops/action-gh-release@v1
+      - name: Zip Report
+        run: zip -r relatorios.zip target/site
+
+      - name: Upload Report Artifact
+        uses: actions/upload-artifact@v2
         with:
-          files: relatorios/RELATORIO-INSERCAO.html
+          name: relatorios
+          path: relatorios.zip
