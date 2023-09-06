@@ -42,5 +42,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: relatorios/RELATORIO-INSERCAO.html
-          token: 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
+          token: ****
           tag_name: v1.0.0 
