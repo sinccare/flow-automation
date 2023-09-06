@@ -33,9 +33,9 @@ jobs:
         run: mvn clean test
 
       - name: Generate Test Report
-        if: always()  # Este passo será executado independentemente do resultado dos testes
+        if: always()
         run: mvn site
-        continue-on-error: true  # Isso garante que este passo continue mesmo se ocorrerem erros
+        continue-on-error: true
 
       - name: Create Release and Upload Report
         id: create_release
@@ -43,4 +43,13 @@ jobs:
         with:
           files: relatorios/RELATORIO-INSERCAO.html
           token: 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
-          tag_name: v1.0.0 
+          tag_name: v1.0.0
+
+      - name: Zip Report
+        run: zip -r relatorios.zip relatorios/
+
+      - name: Upload Report Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: relatorios
+          path: relatorios.zip
