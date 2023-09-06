@@ -32,14 +32,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Build with Maven
-        run: mvn clean verify
-
       - name: Run Tests with Selenide
-        run: mvn test
+        run: mvn clean test
+
+      - name: Generate Test Report
+        if: always()  # Este passo será executado independentemente do resultado dos testes
+        run: mvn site
+        continue-on-error: true  # Isso garante que este passo continue mesmo se ocorrerem erros
 
       - name: Create Release and Upload Report
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: relatorios/RELATORIO-INSERCAO.html
+          files: target/site/relatorios/RELATORIO-INSERCAO.html
